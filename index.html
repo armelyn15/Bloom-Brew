@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bloom & Brew Milk Tea Shop</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+ <!-- Navigation Bar -->
+<header class="navbar">
+  <div class="logo-container">
+    <img src="img/logo2.jpg" alt="Bloom & Brew Logo" class="logo">
+    <h1>Bloom & Brew</h1>
+  </div>
+
+  <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <nav id="mainNav">
+    <a href="#hero">Home</a>
+    <a href="#about">About</a>
+    <a href="#menu">Menu</a>
+    <a href="#cart">Cart</a>
+    <a href="#contact">Contact</a>
+    <button id="logoutBtn">Logout</button>
+    <div class="notif-container">
+      <button id="notifBtn" class="notif-icon">
+        <img src="img/notif.png" alt="Notifications"/>
+      </button>
+      <div id="notifBox" class="notif-box hidden">
+        <ul id="notifList"></ul>
+      </div>
+    </div>
+  </nav>
+</header>
+
+  <!-- Hero Section -->
+  <section id="hero" class="hero">
+    <div class="hero-text">
+      <h2>Freshly Brewed Happiness in Every Cup</h2>
+      <p>Order your favorite milk tea anytime, anywhere.</p>
+      <a href="#menu" class="btn">Order Now</a>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="about">
+    <h2>About Us</h2>
+    <p>
+      Welcome to <b>Bloom & Brew</b> — where flavor meets freshness.
+      We use real tea leaves and premium ingredients for every cup. 
+      Our goal is to bring joy, one sip at a time.
+    </p>
+    <img src="img/back2.jpeg" alt="Milk Tea Shop">
+  </section>
+
+ <!-- Menu Section -->
+<section id="menu" class="menu">
+  <h2>Our Menu</h2>
+  <p class="section-subtitle">Explore our handcrafted milk teas made with love and care.</p>
+  <div class="menu-grid" id="menuGrid">
+    <!-- Menu items will be rendered dynamically -->
+  </div>
+</section>
+
+
+  <!-- Cart Section -->
+<section id="cart" class="cart-section">
+  <h2>🛒 My Cart</h2>
+
+  <div id="cartItems">
+    <!-- Cart items will be dynamically added here -->
+  </div>
+
+  <p id="totalPrice">Total: ₱0</p>
+
+  <h3>Choose Payment Method:</h3>
+  <div class="payment-methods">
+    <label>
+      <input type="radio" name="payment" value="COD" checked />
+      <img src="img/COD.jpg" alt="COD" class="pay-logo" /> Cash on Delivery
+    </label>
+    <label>
+      <input type="radio" name="payment" value="GCash" />
+      <img src="img/GCash_Logo.jpeg" alt="GCash" class="pay-logo" /> GCash
+    </label>
+  </div>
+
+  <button id="checkoutBtn">Checkout</button>
+</section>
+
+<!-- Receipt Popup -->
+<div class="receipt-modal" id="receiptModal">
+  <div class="receipt-content">
+    <h2>Order Successful!</h2>
+    <div id="receiptDetails"></div>
+    <button id="closeReceipt">Close</button>
+  </div>
+</div>
+
+
+  <!-- Vision & Mission -->
+  <section id="vision-mission" class="vision-mission">
+    <h2>Our Vision & Mission</h2>
+    <div class="vm-container">
+      <div class="vm-box">
+        <h3>🌟 Vision</h3>
+        <p> “To provide a seamless and efficient ordering experience that connects 
+            customers to freshly brewed milk tea with convenience and satisfaction.”</p>
+      </div>
+      <div class="vm-box">
+        <h3>🎯 Mission</h3>
+        <p>“Our mission is to develop a user-friendly system that allows customers to easily browse,
+            order, and enjoy Bloom and Brew’s quality milk tea. We aim to promote efficiency, 
+            accuracy, and customer satisfaction through technology-driven service.”</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="contact">
+    <h2>Contact Us</h2>
+    <p class="section-subtitle">We’d love to hear from you! Reach out with any questions or feedback.</p>
+    <div class="contact-container">
+      <div class="contact-info">
+        <p>📍 Address: Anilao Proper, Mabini, Batangas</p>
+        <p>📞 Phone: +63 910-4128-998</p>
+        <p>✉️ Email: bloomandbrew@gmail.com</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 Bloom & Brew Milk Tea Shop — Crafted with Love 🧋</p>
+    <div class="socials">
+      <a href="#">Facebook</a> | <a href="#">Instagram</a> | <a href="#">Twitter</a>
+    </div>
+  </footer>
+
+  <!-- ✅ Toast Notification -->
+  <div id="toast" class="toast"></div>
+
+  <div id="imageCache" aria-hidden="true">
+    <img src="img/back2.jpeg" alt="Background texture">
+    <img src="img/backk2.jpg" alt="Background variant">
+    <img src="img/brownsugar.jpeg" alt="Brown sugar milk tea">
+    <img src="img/caramel-milk-tea-.jpeg" alt="Caramel milk tea">
+    <img src="img/chocolate.jpeg" alt="Chocolate milk tea">
+    <img src="img/classic.jpeg" alt="Classic milk tea">
+    <img src="img/COD.jpg" alt="Cash on delivery logo">
+    <img src="img/front.jpg" alt="Bloom and Brew storefront">
+    <img src="img/GCash_Logo.jpeg" alt="GCash logo">
+    <img src="img/honeydew_milk_tea_.jpeg" alt="Honeydew milk tea">
+    <img src="img/inJoy-Wintermelon-Milk-Tea-Drinks.jpeg" alt="Wintermelon milk tea">
+    <img src="img/logo2.jpg" alt="Bloom and Brew logo">
+    <img src="img/MangoMilkTea.jpeg" alt="Mango milk tea">
+    <img src="img/matcha.jpeg" alt="Matcha milk tea">
+    <img src="img/milktea.jpg" alt="Milk tea illustration">
+    <img src="img/notif.png" alt="Notification icon">
+    <img src="img/okinawa.jpeg" alt="Okinawa milk tea">
+    <img src="img/Oreo-Bubble-Milk-Tea-Boba,jpeg.jpg" alt="Cookies and cream milk tea">
+    <img src="img/simple-milk-tea-drink-pearl-background.jpeg" alt="Simple milk tea background">
+    <img src="img/strawberry.jpeg" alt="Strawberry milk tea">
+    <img src="img/taro.jpeg" alt="Taro milk tea">
+  </div>
+
+  <script id="defaultMenuData" type="application/json">
+  [
+    { "name": "Classic Milk Tea", "price": 39, "img": "img/classic.jpeg" },
+    { "name": "Wintermelon Milk Tea", "price": 55, "img": "img/inJoy-Wintermelon-Milk-Tea-Drinks.jpeg" },
+    { "name": "Okinawa Milk Tea", "price": 49, "img": "img/okinawa.jpeg" },
+    { "name": "Matcha Milk Tea", "price": 59, "img": "img/matcha.jpeg" },
+    { "name": "Taro Milk Tea", "price": 39, "img": "img/taro.jpeg" },
+    { "name": "Strawberry Milk Tea", "price": 59, "img": "img/strawberry.jpeg" },
+    { "name": "Chocolate Milk Tea", "price": 45, "img": "img/chocolate.jpeg" },
+    { "name": "Brown Sugar Milk Tea", "price": 49, "img": "img/brownsugar.jpeg" },
+    { "name": "Caramel Milk Tea", "price": 55, "img": "img/caramel-milk-tea-.jpeg" },
+    { "name": "Honeydew Milk Tea", "price": 49, "img": "img/honeydew_milk_tea_.jpeg" },
+    { "name": "Cookies & Cream Milk Tea", "price": 49, "img": "img/Oreo-Bubble-Milk-Tea-Boba,jpeg.jpg" },
+    { "name": "Mango Milk Tea", "price": 49, "img": "img/MangoMilkTea.jpeg" }
+  ]
+  </script>
+
+  <script>
+  (function seedDefaultMenu() {
+    const dataNode = document.getElementById("defaultMenuData");
+    if (!dataNode) return;
+    try {
+      const parsed = JSON.parse(dataNode.textContent || "[]");
+      if (Array.isArray(parsed) && parsed.length) {
+        window.__DEFAULT_MENU__ = parsed.map(entry => ({ ...entry }));
+        sessionStorage.setItem("__DEFAULT_MENU__", JSON.stringify(window.__DEFAULT_MENU__));
+      }
+    } catch (error) {
+      console.error("Failed to seed default menu:", error);
+    }
+  })();
+  </script>
+
+  <script src="script.js"></script>
+</body>
+</html>

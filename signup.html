@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up | Bloom & Brew Milk Tea Shop</title>
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- ✅ Add SweetAlert2 Library -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <style>
+    /* Optional: customize SweetAlert2 popup look */
+    .swal2-popup {
+      font-family: "Poppins", sans-serif;
+      border-radius: 16px !important;
+      background: #fff8ee !important;
+      color: #5b3a29 !important;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2) !important;
+    }
+
+    .swal2-title {
+      color: #8b4513 !important;
+      font-weight: 600 !important;
+    }
+
+    .swal2-styled.swal2-confirm {
+      background-color: #8b4513 !important;
+      border: none !important;
+      border-radius: 8px !important;
+      padding: 8px 20px !important;
+      transition: 0.3s;
+    }
+
+    .swal2-styled.swal2-confirm:hover {
+      background-color: #a0522d !important;
+    }
+  </style>
+</head>
+<body class="login-body">
+  <div class="login-card" id="signupContainer">
+    <h2>🧋 Create Account</h2>
+    <p>Join the Bloom & Brew family!</p>
+
+    <form id="signupForm">
+      <input type="text" id="newUsername" placeholder="Choose Username" required />
+      <input type="password" id="newPassword" placeholder="Create Password" required />
+
+      <label for="role">Select Role:</label>
+      <select id="role" required>
+        <option value="customer">Customer</option>
+        <option value="staff">Staff</option>
+        <option value="admin">Admin</option>
+      </select>
+
+      <button type="submit">Sign Up</button>
+      <p class="note">Already have an account? <a href="login.html">Login here</a></p>
+    </form>
+  </div>
+
+  <!-- Success Overlay -->
+  <div class="success-overlay" id="successOverlay">
+    <div class="success-card">
+      <h2>Success!</h2>
+      <p>Your account has been created</p>
+      <div class="checkmark">✔</div>
+      <button id="continueBtn">Continue</button>
+    </div>
+  </div>
+
+  <script>
+    const signupForm = document.getElementById("signupForm");
+    const successOverlay = document.getElementById("successOverlay");
+    const continueBtn = document.getElementById("continueBtn");
+
+    signupForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const username = document.getElementById("newUsername").value.trim();
+      const password = document.getElementById("newPassword").value.trim();
+      const role = document.getElementById("role").value;
+
+      // ✅ Check for empty fields
+      if (!username || !password) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Missing Information',
+          text: 'Please fill in all fields!',
+          confirmButtonColor: '#8b4513',
+          background: '#fff8ee',
+          color: '#5b3a29'
+        });
+        return;
+      }
+
+      // ✅ Password length check (8 or more characters)
+      if (password.length < 8) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Weak Password',
+          text: 'Password must be at least 8 characters long!',
+          confirmButtonColor: '#8b4513',
+          background: '#fff8ee',
+          color: '#5b3a29'
+        });
+        return;
+      }
+
+      // ✅ Save new user to localStorage
+      const users = JSON.parse(localStorage.getItem("users")) || [];
+      users.push({ username, password, role });
+      localStorage.setItem("users", JSON.stringify(users));
+
+      // ✅ Success popup
+      Swal.fire({
+        icon: 'success',
+        title: 'Account Created!',
+        text: 'Welcome to the Bloom & Brew Milktea Shop!',
+        confirmButtonText: 'Continue',
+        confirmButtonColor: '#8b4513',
+        background: '#fff8ee',
+        color: '#5b3a29'
+      }).then(() => {
+        window.location.href = "login.html";
+      });
+    });
+
+    continueBtn.addEventListener("click", function () {
+      window.location.href = "login.html";
+    });
+  </script>
+</body>
+</html>

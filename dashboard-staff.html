@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Staff Dashboard | Bloom & Brew</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      background-color: #fff8e7; 
+    }
+    .navbar {
+      background-color: #fff8e7; 
+    }
+    .logo {
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+    .navbar h1 {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: #5c2b29;
+    }
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <h1>
+      <img src="img/logo2.jpg" alt="Bloom & Brew Logo" class="logo" />
+      🧋 Staff Dashboard
+    </h1>
+    <button id="logoutBtn">Logout</button>
+  </header>
+
+  <section class="dashboard">
+    <h2>Welcome, Staff!</h2>
+
+    <div class="admin-section">
+      <h3>📦 Customer Orders</h3>
+      <table class="user-table">
+        <thead>
+          <tr>
+            <th>Customer</th>
+            <th>Items</th>
+            <th>Total</th>
+            <th>Payment</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="orderTableBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>

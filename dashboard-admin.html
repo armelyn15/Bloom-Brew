@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard | Bloom & Brew</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body { font-family:'Poppins',sans-serif; background:#f5b872; margin:0; padding:0; }
+    .navbar { background:#edd3a1; color:#fff; display:flex; justify-content:space-between; align-items:center; padding:0.8rem 2rem; box-shadow:0 2px 5px rgba(0,0,0,0.1);}
+    .navbar-left { display:flex; align-items:center; gap:10px;}
+    .navbar-left img { width:60px; height:60px; border-radius:50%; object-fit:cover;}
+    .navbar-left h1 { font-size:1.5rem; margin:0; color:#fff;}
+    .dashboard { padding:2rem;}
+    .admin-section { background:#ece9e4; padding:1.5rem; margin-top:1.5rem; border-radius:10px; box-shadow:0 2px 5px rgba(0,0,0,0.1);}
+    .admin-section h3 { margin-bottom:1rem; }
+    table { width:100%; border-collapse:collapse; margin-top:10px;}
+    th, td { border:1px solid #d4a65d; padding:10px; text-align:center;}
+    th { background:#f5b067;}
+    button { background:#ffbe6f; border:none; color:white; padding:8px 12px; border-radius:5px; cursor:pointer;}
+    button:hover { background:#e7c95c;}
+    input, select { padding:8px; margin-right:8px;}
+    img { width:70px; height:70px; border-radius:8px; object-fit:cover;}
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <div class="navbar-left">
+      <img src="img/logo2.jpg" alt="Logo">
+      <h1>Admin Dashboard</h1>
+    </div>
+    <button id="logoutBtn">Logout</button>
+  </header>
+
+  <section class="dashboard">
+    <h2>Welcome, Admin!</h2>
+
+    <!-- Manage Users -->
+    <div class="admin-section">
+      <h3>👥 Manage Users</h3>
+      <form id="userForm">
+        <input type="text" id="username" placeholder="Username" required />
+        <select id="userRole" required>
+          <option value="Customer">Customer</option>
+          <option value="Staff">Staff</option>
+          <option value="Admin">Admin</option>
+        </select>
+        <button type="submit">Add User</button>
+      </form>
+      <table>
+        <thead>
+          <tr><th>Username</th><th>Role</th><th>Action</th></tr>
+        </thead>
+        <tbody id="userTableBody"></tbody>
+      </table>
+    </div>
+
+    <!-- Manage Menu -->
+    <div class="admin-section">
+      <h3>📋 Manage Menu</h3>
+      <form id="menuForm">
+        <input type="text" id="itemName" placeholder="Milk Tea Name" required />
+        <input type="number" id="itemPrice" placeholder="Price (₱)" required />
+        <input type="file" id="itemImage" accept="image/*" required />
+        <button type="submit">Add Item</button>
+      </form>
+      <table>
+        <thead>
+          <tr><th>Name</th><th>Price</th><th>Image</th><th>Action</th></tr>
+        </thead>
+        <tbody id="menuTableBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <script src="script.js"></script>
+  <script>
+  (function () {
+    const defaultUsers = [
+      { username: "admin", role: "Admin" },
+      { username: "user1", role: "Customer" }
+    ];
+
+    function loadDefaultMenuSeed() {
+      if (typeof window !== "undefined" && Array.isArray(window.__DEFAULT_MENU__)) {
+        return window.__DEFAULT_MENU__.map(item => ({ ...item }));
+      }
+      try {
+        const fromSession = sessionStorage.getItem("__DEFAULT_MENU__");
+        if (fromSession) {
+          return JSON.parse(fromSession);
+        }
+      } catch (_) {}
+      const dataNode = document.getElementById("defaultMenuData");
+      if (dataNode) {
+        try {
+          return JSON.parse(dataNode.textContent || "[]");
+        } catch (_) {}
+      }
+      return [];
+    }
+
+    const defaultMenu = loadDefaultMenuSeed();
+    const defaultMenuFallbackImage = defaultMenu.find(item => item?.img)?.img || "";
+
+    let users = JSON.parse(localStorage.getItem("users"));
+    if (!Array.isArray(users) || users.length === 0) {
+      users = [...defaultUsers];
+    }
+    localStorage.setItem("users", JSON.stringify(users));
+
+    const legacyMenu = JSON.parse(localStorage.getItem("menuItems"));
+    let menuItems = JSON.parse(localStorage.getItem("menu"));
+
+    if (Array.isArray(legacyMenu) && legacyMenu.length) {
+      menuItems = legacyMenu.map(item => ({
+        name: item.name,
+        price: item.price,
+        img: item.img || item.image || defaultMenuFallbackImage
+      }));
+      localStorage.removeItem("menuItems");
+    }
+
+    if (!Array.isArray(menuItems) || menuItems.length === 0) {
+      menuItems = defaultMenu.map(entry => ({ ...entry }));
+    }
+    localStorage.setItem("menu", JSON.stringify(menuItems));
+
+    const userTableBody = document.getElementById("userTableBody");
+    const menuTableBody = document.getElementById("menuTableBody");
+    const userForm = document.getElementById("userForm");
+    const menuForm = document.getElementById("menuForm");
+
+    function renderUsers() {
+      if (!userTableBody) return;
+      userTableBody.innerHTML = "";
+      users.forEach((u, i) => {
+        userTableBody.innerHTML += `
+          <tr>
+            <td>${u.username}</td>
+            <td>${u.role}</td>
+            <td>
+              <button onclick="changeRole(${i})">Change Role</button>
+              <button onclick="deleteUser(${i})">Delete</button>
+            </td>
+          </tr>`;
+      });
+      localStorage.setItem("users", JSON.stringify(users));
+    }
+
+    function renderMenu() {
+      if (!menuTableBody) return;
+      menuTableBody.innerHTML = "";
+      if (menuItems.length === 0) {
+        menuTableBody.innerHTML = `
+          <tr>
+            <td colspan="4">No menu items yet.</td>
+          </tr>`;
+        return;
+      }
+      const fallbackImage =
+        menuItems.find(entry => entry?.img)?.img ||
+        defaultMenuFallbackImage ||
+        "";
+
+      menuTableBody.innerHTML = menuItems.map((item, i) => {
+        const price = Number(item.price) || 0;
+        const imgSrc = item.img || item.image || fallbackImage || "";
+        return `
+          <tr>
+            <td>${item.name}</td>
+            <td>₱${price.toFixed(2).replace(/\.00$/, '')}</td>
+            <td><img src="${imgSrc}" alt="${item.name}"></td>
+            <td><button onclick="deleteMenu(${i})">Delete</button></td>
+          </tr>`;
+      }).join("");
+
+      if (fallbackImage) {
+        menuTableBody.querySelectorAll("img").forEach(imgEl => {
+          imgEl.addEventListener("error", () => {
+            if (imgEl.dataset.fallbackApplied === "true") return;
+            imgEl.dataset.fallbackApplied = "true";
+            imgEl.src = fallbackImage;
+          }, { once: true });
+        });
+      }
+      localStorage.setItem("menu", JSON.stringify(menuItems));
+    }
+
+    if (userForm) {
+      userForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const username = document.getElementById("username").value.trim();
+        const role = document.getElementById("userRole").value;
+        if (!username) {
+          showToast("Please provide a username.", "error");
+          return;
+        }
+        if (users.some(u => u.username.toLowerCase() === username.toLowerCase())) {
+          showToast("Username already exists!", "error");
+          return;
+        }
+        users.push({ username, role });
+        renderUsers();
+        showToast("User added successfully.", "success");
+        e.target.reset();
+      });
+    }
+
+    if (menuForm) {
+      menuForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const name = document.getElementById("itemName").value.trim();
+        const priceValue = document.getElementById("itemPrice").value;
+        const price = parseFloat(priceValue);
+        const fileInput = document.getElementById("itemImage");
+        const file = fileInput.files[0];
+
+        if (!name) {
+          showToast("Please provide a product name.", "error");
+          return;
+        }
+        if (isNaN(price) || price < 0) {
+          showToast("Please provide a valid price.", "error");
+          return;
+        }
+        if (!file) {
+          showToast("Please select an image.", "error");
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function () {
+          menuItems.push({ name, price, img: reader.result });
+          localStorage.setItem("menu", JSON.stringify(menuItems));
+          renderMenu();
+          showToast("Menu item added.", "success");
+          e.target.reset();
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    window.deleteUser = async function (index) {
+      const confirmed = await showConfirm(
+        "Deleting this user will remove their access. Proceed?",
+        { confirmText: "Yes, delete", cancelText: "Cancel", variant: "danger" }
+      );
+      if (!confirmed) return;
+      users.splice(index, 1);
+      renderUsers();
+      showToast("User deleted.", "success");
+    };
+
+    window.changeRole = function (index) {
+      const role = prompt("New Role:", users[index].role);
+      if (role && ["Admin", "Staff", "Customer"].includes(role)) {
+        users[index].role = role;
+        renderUsers();
+        showToast("Role updated.", "success");
+      } else if (role !== null) {
+        showToast("Invalid role!", "error");
+      }
+    };
+
+    window.deleteMenu = async function (index) {
+      const confirmed = await showConfirm(
+        "This drink will be removed from the menu list for all customers. Continue?",
+        { confirmText: "Delete item", cancelText: "Keep item", variant: "danger" }
+      );
+      if (!confirmed) return;
+      menuItems.splice(index, 1);
+      localStorage.setItem("menu", JSON.stringify(menuItems));
+      renderMenu();
+      showToast("Menu item deleted.", "success");
+    };
+
+    window.addEventListener("storage", (event) => {
+      if (event.key === "menu") {
+        menuItems = JSON.parse(localStorage.getItem("menu")) || [];
+        renderMenu();
+      }
+      if (event.key === "users") {
+        users = JSON.parse(localStorage.getItem("users")) || [];
+        renderUsers();
+      }
+    });
+
+    const logoutBtn = document.getElementById("logoutBtn");
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", () => {
+        window.location.href = "login.html";
+      });
+    }
+
+    renderUsers();
+    renderMenu();
+  })();
+  </script>
+</body>
+</html>

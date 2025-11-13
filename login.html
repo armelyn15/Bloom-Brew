@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login | Bloom & Brew Milk Tea Shop</title>
+  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    /* === Aesthetic Login Message === */
+    .login-message {
+      display: none;
+      margin-top: 12px;
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-size: 14px;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(-8px);
+      transition: all 0.4s ease;
+    }
+
+    .login-message.show {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .login-message.error {
+      background-color: rgba(255, 99, 99, 0.15);
+      color: #b30000;
+      border: 1px solid #e58a8a;
+    }
+
+    .login-message.success {
+      background-color: rgba(102, 187, 106, 0.15);
+      color: #1b5e20;
+      border: 1px solid #81c784;
+    }
+  </style>
+</head>
+<body class="login-body">
+  <div class="login-card">
+    <h2>🧋 Bloom & Brew</h2>
+    <p>Login to continue</p>
+
+    <form id="loginForm">
+      <input type="text" id="username" placeholder="Username" required />
+      <input type="password" id="password" placeholder="Password" required />
+      <button type="submit">Login</button>
+      <p class="note">Don’t have an account? <a href="signup.html">Sign up here</a></p>
+    </form>
+
+    <!-- ✅ Message container added -->
+    <div id="loginMessage" class="login-message"></div>
+  </div>
+
+  <script>
+    // ✅ Load users saved from sign-up
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+    const loginForm = document.getElementById("loginForm");
+    const msg = document.getElementById("loginMessage");
+
+    loginForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      // ✅ Require 8 or more characters
+      if (password.length < 8) {
+        msg.textContent = "Password must be at least 8 characters long!";
+        msg.className = "login-message error show";
+        setTimeout(() => msg.classList.remove("show"), 3000);
+        return;
+      }
+
+      // ✅ Check if user exists
+      const foundUser = users.find(
+        (u) => u.username === username && u.password === password
+      );
+
+      if (foundUser) {
+        // ✅ Show success message
+        msg.textContent = "Login successful! Redirecting...";
+        msg.className = "login-message success show";
+
+        // ✅ Save login info (important!)
+        localStorage.setItem("loggedIn", "true");
+        localStorage.setItem("currentUser", JSON.stringify(foundUser));
+
+        // ✅ Redirect based on role (unchanged logic)
+        setTimeout(() => {
+          if (foundUser.role === "admin") {
+            window.location.href = "dashboard-admin.html";
+          } else if (foundUser.role === "staff") {
+            window.location.href = "dashboard-staff.html";
+          } else {
+            window.location.href = "index.html"; // customer
+          }
+        }, 1000);
+      } else {
+        msg.textContent = "Invalid username or password!";
+        msg.className = "login-message error show";
+        setTimeout(() => msg.classList.remove("show"), 3000);
+      }
+    });
+  </script>
+</body>
+</html>
